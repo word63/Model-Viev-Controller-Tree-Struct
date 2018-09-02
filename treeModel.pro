@@ -26,12 +26,14 @@ SOURCES += \
         main.cpp \
         widget.cpp \
     models/node.cpp \
-    models/simpletreemodel.cpp
+    models/simpletreemodel.cpp \
+    device/comportdevice.cpp
 
 HEADERS += \
     models/node.h \
     models/simpletreemodel.h \
-    widget.h
+    widget.h \
+    device/comportdevice.h
 
 FORMS += \
         widget.ui

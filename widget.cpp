@@ -8,15 +8,29 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
 
     ui->treeView->setModel(&localModel);
-
-
-
     QTreeView *temp = ui->treeView;
-    //ui->treeView->expanded()
-
     connect(temp, &QTreeView::expanded , this, &Widget::tableUpbate);
 
-    //connect(temp,SIGNAL(expanded(QModelIndex())),this,SLOT(tableUpbate()));
+    QVBoxLayout *scrollLay = new QVBoxLayout();
+
+    ComPortDevice *dev = new ComPortDevice();
+    scrollLay->addWidget(dev);
+
+    ComPortDevice *dev2 = new ComPortDevice();
+    scrollLay->addWidget(dev2);
+
+    QSpacerItem *spaser = new QSpacerItem(10,10,QSizePolicy::Minimum,QSizePolicy::Expanding);
+
+
+    scrollLay->addSpacerItem(spaser);
+
+
+    ui->scrollAreaWidgetContents->setLayout(scrollLay);
+
+
+    //this->layout()->addWidget(dev);
+
+
 }
 
 Widget::~Widget()
