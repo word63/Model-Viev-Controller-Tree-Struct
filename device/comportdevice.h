@@ -3,14 +3,17 @@
 
 #include <QWidget>
 #include <QPushButton>
-#include <QDebug>
-#include <QVBoxLayout>
 
-#include <QStyleOption>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+#include <QLabel>
+#include <QLineEdit>
+
+
 #include <QPainter>
-#include <QStyle>
-#include <QPen>
-#include <QColor>
+
 
 class ComPortDevice : public QWidget
 {
@@ -18,14 +21,17 @@ class ComPortDevice : public QWidget
 public:
     explicit ComPortDevice(QWidget *parent = nullptr);
 
+    void setDiscription(const QString &value);
+
 signals:
 
 public slots:
 
 private:
+    QLabel *desc;
+    QString discription = "COM_Port_1";
     QVBoxLayout *newLay;
 
-    // QWidget interface
 protected:
     void paintEvent(QPaintEvent *event);
 

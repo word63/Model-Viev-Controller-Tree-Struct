@@ -14,22 +14,17 @@ Widget::Widget(QWidget *parent) :
     QVBoxLayout *scrollLay = new QVBoxLayout();
 
     ComPortDevice *dev = new ComPortDevice();
+    dev->setDiscription("Com_port_1");
     scrollLay->addWidget(dev);
 
     ComPortDevice *dev2 = new ComPortDevice();
+    dev2->setDiscription("Com_port_2");
     scrollLay->addWidget(dev2);
 
+
     QSpacerItem *spaser = new QSpacerItem(10,10,QSizePolicy::Minimum,QSizePolicy::Expanding);
-
-
     scrollLay->addSpacerItem(spaser);
-
-
     ui->scrollAreaWidgetContents->setLayout(scrollLay);
-
-
-    //this->layout()->addWidget(dev);
-
 
 }
 
