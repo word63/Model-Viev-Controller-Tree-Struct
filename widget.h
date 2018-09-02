@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include "models/simpletreemodel.h"
+#include "device/comportdevice.h"
+#include <QVBoxLayout>
+#include <QSpacerItem>
 
 
 namespace Ui {
