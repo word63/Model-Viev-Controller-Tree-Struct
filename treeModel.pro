@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+QT       += \
+        core gui widgets network
+
 
 TARGET = treeModel
 TEMPLATE = app
@@ -27,13 +29,21 @@ SOURCES += \
         widget.cpp \
     models/node.cpp \
     models/simpletreemodel.cpp \
-    device/comportdevice.cpp
+    device/comportdevice.cpp \
+    device/abstractiodevice.cpp \
+    device/serverdevice.cpp \
+    tcpserver.cpp \
+    device/socketdevice.cpp
 
 HEADERS += \
     models/node.h \
     models/simpletreemodel.h \
     widget.h \
-    device/comportdevice.h
+    device/comportdevice.h \
+    device/abstractiodevice.h \
+    device/serverdevice.h \
+    tcpserver.h \
+    device/socketdevice.h
 
 FORMS += \
         widget.ui
