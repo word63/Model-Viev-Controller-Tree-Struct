@@ -21,7 +21,7 @@ void AbstractIODevice::Initialization()
     lOpenStatus->setText("Closed");
 
     createLineWidget(description);
-    createLineWidget("Open: ", lOpenStatus);
+    createLineWidget("Status: ", lOpenStatus);
     createLineWidget("Read: ", lReadData);
     createLineWidget("Write: ", lWriteData);
 
@@ -65,6 +65,11 @@ void AbstractIODevice::setDesription(QString description)
 int AbstractIODevice::getWidgetCount() const
 {
     return widgetCount;
+}
+
+void AbstractIODevice::bridgeTo(AbstractIODevice *from)
+{
+//    connect();
 }
 
 void AbstractIODevice::paintEvent(QPaintEvent *event)

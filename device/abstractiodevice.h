@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPushButton>
 
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
@@ -20,8 +21,9 @@ public:
     AbstractIODevice(QString description = "undefined", QWidget *parent = nullptr);
     void setDesription(QString description);
 
-
     int getWidgetCount() const;
+
+    void bridgeTo(AbstractIODevice *from);
 
 protected:
     int widgetCount = 0;
@@ -42,8 +44,10 @@ protected:
 
     QPushButton *pbtnSend;
     
-signals:
+protected slots:
 
+signals:
+    void dataReceived(QString datas);
 };
 
 #endif // ABSTRACTIODEVICE_H

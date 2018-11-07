@@ -50,14 +50,22 @@ void SocketDevice::on_pbtnSend_clicked()
 
 void SocketDevice::on_pbtnConnect_clicked()
 {
-
-    socket->connectToHost(ipLine->text(), 8080);
-
     if(!socket->isOpen())
-        lOpenStatus->setText("Closed");
-    else
-        lOpenStatus->setText("Open");
+    {
 
+        socket->connectToHost(ipLine->text(), 8080);
+
+        pbtnConnect->setText("Disconnect");
+        lOpenStatus->setText("Open");
+    }
+    else
+    {
+        socket->close();
+
+        lOpenStatus->setText("Closed");
+        pbtnConnect->setText("Connect");
+
+    }
 }
 
 void SocketDevice::slotTransmitData()
