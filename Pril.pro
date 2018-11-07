@@ -1,14 +1,15 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-09-01T19:08:19
+# Project created by QtCreator 2018-11-07T15:22:53
 #
 #-------------------------------------------------
 
 QT       += \
-        core gui widgets network
+        core gui widgets network charts serialport
 
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = treeModel
+TARGET = Pril
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -26,27 +27,35 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        widget.cpp \
+        mainwindow.cpp \
+    tcpserver.cpp \
+    visualisation/chartwidget.cpp \
+    visualisation/datavisualisator.cpp \
+    visualisation/logwidget.cpp \
+    models/datadispatcher.cpp \
     models/node.cpp \
     models/simpletreemodel.cpp \
-    device/comportdevice.cpp \
     device/abstractiodevice.cpp \
+    device/comportdevice.cpp \
     device/serverdevice.cpp \
-    tcpserver.cpp \
     device/socketdevice.cpp
 
 HEADERS += \
+        mainwindow.h \
+    tcpserver.h \
+    visualisation/chartwidget.h \
+    visualisation/datavisualisator.h \
+    visualisation/logwidget.h \
+    models/datadispatcher.h \
     models/node.h \
     models/simpletreemodel.h \
-    widget.h \
-    device/comportdevice.h \
     device/abstractiodevice.h \
+    device/comportdevice.h \
     device/serverdevice.h \
-    tcpserver.h \
     device/socketdevice.h
 
 FORMS += \
-        widget.ui
+        mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

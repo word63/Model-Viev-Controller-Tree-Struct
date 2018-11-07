@@ -89,8 +89,8 @@ QVariant SimpleTreeModel::data(const QModelIndex &index, int role) const
 
 
     if (role == Qt::BackgroundRole)
-        if(index.row()%2) return QBrush(QColor(Qt::green));
-        else return QBrush(QColor(Qt::cyan));
+        if(index.row()%2) return QBrush(QColor(0,128,0,100));
+        else return QBrush(QColor(0,255,255,100));
 
 
     if (role != Qt::DisplayRole)

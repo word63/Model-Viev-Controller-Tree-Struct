@@ -1,41 +1,37 @@
 #ifndef COMPORTDEVICE_H
 #define COMPORTDEVICE_H
 
-#include <QWidget>
+#include "device/abstractiodevice.h"
+#include <QDebug>
 #include <QPushButton>
-
-
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-
-#include <QLabel>
 #include <QLineEdit>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 
-
-#include <QPainter>
-
-
-class ComPortDevice : public QWidget
+class ComPortDevice : public AbstractIODevice
 {
     Q_OBJECT
-public:
-    explicit ComPortDevice(QWidget *parent = nullptr);
-
-    void setDiscription(const QString &value);
-
-signals:
-
-public slots:
-
 private:
-    QLabel *desc;
-    QString discription = "COM_Port_1";
-    QVBoxLayout *newLay;
+    QPushButton *pbtnConnect;
+    QLineEdit *comportStr;
+    QLineEdit * baudStr;
+    QSerialPort *serPort;
+
+    bool isConnected = false;
+public:
+    explicit ComPortDevice(QString description);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+//    void paintEvent(QPaintEvent *event);
+private slots:
+    void getData();
+    void on_pbtnConnect_clicked();
+    void setOpen();
+    void on_pbtnSend_clicked();
 
-
+signals:
+    void setOpenProperty();
+    void sendData(QString str);
 };
 
 #endif // COMPORTDEVICE_H
