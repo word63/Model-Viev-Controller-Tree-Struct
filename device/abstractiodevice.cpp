@@ -7,6 +7,7 @@ AbstractIODevice::AbstractIODevice(QString description, QWidget *parent) : QWidg
 }
 
 
+
 void AbstractIODevice::Initialization()
 {
     mainLayout = new QVBoxLayout();
@@ -15,26 +16,30 @@ void AbstractIODevice::Initialization()
     lReadData = new  QLineEdit();
     lWriteData = new  QLineEdit();
 
+    pbtnSend = new QPushButton("Send data");
+    pbtnClose = new QPushButton("delete device");
+
+    pbtnClose->setStyleSheet("background-color: rgba(255,0,0,100)");
+
     lOpenStatus->setReadOnly(true);
     lReadData->setReadOnly(true);
 
     lOpenStatus->setText("Closed");
 
-    createLineWidget(description);
+    createLineWidget(description, pbtnClose);
     createLineWidget("Status: ", lOpenStatus);
     createLineWidget("Read: ", lReadData);
     createLineWidget("Write: ", lWriteData);
+    createLineWidget(pbtnSend);
 
-
-    pbtnSend = new QPushButton("Send data");
-    mainLayout->addWidget(pbtnSend);
     this->setLayout(mainLayout);
 
+    connect(pbtnClose, &QPushButton::clicked, this, &AbstractIODevice::on_pbtnClose_clicked);
 }
 
 void AbstractIODevice::createLineWidget(QString labelStr, QWidget *widget)
 {
-    widgetCount++;
+    wLineCount++;
     QHBoxLayout *hlayout = new QHBoxLayout();
 
     QLabel *label = new QLabel(labelStr);
@@ -48,7 +53,7 @@ void AbstractIODevice::createLineWidget(QString labelStr, QWidget *widget)
 
 void AbstractIODevice::createLineWidget(QWidget *widget)
 {
-    widgetCount++;
+    wLineCount++;
     if(widget != nullptr)
     {
         mainLayout->addWidget(widget);
@@ -57,19 +62,20 @@ void AbstractIODevice::createLineWidget(QWidget *widget)
 
 
 
-void AbstractIODevice::setDesription(QString description)
+void AbstractIODevice::setDesription(const QString description)
 {
-    this->description = description;
+    if(!description.isNull())
+        this->description = description;
 }
 
-int AbstractIODevice::getWidgetCount() const
+void AbstractIODevice::bridgeTo(AbstractIODevice *device)
 {
-    return widgetCount;
+    bridgedDevices.append(device);
 }
 
-void AbstractIODevice::bridgeTo(AbstractIODevice *from)
+void AbstractIODevice::unbridgeFrom(AbstractIODevice *device)
 {
-//    connect();
+   bridgedDevices.removeOne(device);
 }
 
 void AbstractIODevice::paintEvent(QPaintEvent *event)
@@ -80,5 +86,33 @@ void AbstractIODevice::paintEvent(QPaintEvent *event)
     p.setPen(QPen(QColor(Qt::cyan)));
     p.setBrush(QBrush(Qt::white));
     p.drawRoundedRect(1, 1, width() - 2, height() - 2,3,3, Qt::AbsoluteSize);
+}
+
+void AbstractIODevice::sendData(QString datas)
+{
+
+}
+
+void AbstractIODevice::on_pbtnClose_clicked()
+{
+
+}
+
+void AbstractIODevice::notificateBridges(QString datas)
+{
+    foreach (AbstractIODevice* device, bridgedDevices) {
+       device->sendData(datas);
+    }
+}
+
+
+int AbstractIODevice::getWLineCount() const
+{
+    return wLineCount;
+}
+
+QString AbstractIODevice::getDescription() const
+{
+    return description;
 }
 

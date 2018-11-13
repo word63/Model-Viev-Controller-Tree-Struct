@@ -30,15 +30,12 @@ public:
     void changeType(int type);
 
 signals:
-
+    void typeChanged();
 public slots:
-
+    void slotTypeChanged();
     // QWidget interface
 protected:
     void resizeEvent(QResizeEvent *event) override;
-
-    // QWidget interface
-protected:
     void paintEvent(QPaintEvent *event) override;
 };
 

@@ -7,23 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setUpTreeView();
-
-    setUpDevices();
-
-    setUpChart();
-
     this->setMinimumWidth(800);
-}
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-void MainWindow::setUpTreeView()
-{
-
+    //[1]! TREE VIEW
     ui->treeView->setModel(&localModel);
 
     QTreeView *temp = ui->treeView;
@@ -31,50 +17,40 @@ void MainWindow::setUpTreeView()
     connect(temp, &QTreeView::expanded , this, &MainWindow::tableUpbate);
     connect(temp, &QTreeView::collapsed, this, &MainWindow::tableUpbate);
 
-}
+    //[2]! DEVICES
+    devicer = new DeviceDispatcher();
 
-void MainWindow::setUpDevices()
-{
-    QVBoxLayout *scrollLay = new QVBoxLayout();
-    ComPortDevice *dev = new ComPortDevice("Com_port_1");
-    ServerDevice *dev3 = new ServerDevice("Server_Port_3");
-    SocketDevice *dev4 = new SocketDevice("Socket_Port_4");
-
-    scrollLay->addWidget(dev);
-    scrollLay->addWidget(dev3);
-    scrollLay->addWidget(dev4);
-
-    deviceList << dev << dev3 << dev4;
-
-    foreach(AbstractIODevice* device, deviceList)
-    {
-        device->setFixedHeight(device->getWidgetCount()*40);
-    }
-
+    leftScrollLay = new QVBoxLayout();
     QSpacerItem *spaser = new QSpacerItem(10,10,QSizePolicy::Minimum,QSizePolicy::Expanding);
-    scrollLay->addSpacerItem(spaser);
-    ui->scrollAreaWidgetContents->setLayout(scrollLay);
+
+    leftScrollLay->addSpacerItem(spaser);
+
+    ui->scrollAreaWidgetContents->setLayout(leftScrollLay);
     ui->scrollArea_Left->setFixedWidth(200);
-    server = new TcpServer(8080);
 
-    connect(server, &TcpServer::deviceCountChanged, dev3, &ServerDevice::updateOpenStatus);
-    connect(server, &TcpServer::requestedMessage, dev3, &ServerDevice::setRequestedData);
-    connect(dev3, &ServerDevice::receiveData, server, &TcpServer::slotSendData);
-    connect(dev, &ComPortDevice::sendData, this, &MainWindow::getFromCom);
-
-}
-
-void MainWindow::setUpChart()
-{
+    //[3]!  VISUALISATION
     dataVis = new DataVisualisator(this, 1);
 
-    QVBoxLayout *scrollLay = new QVBoxLayout();
-    scrollLay->addWidget(dataVis);
-    ui->scrollArea_Right->setLayout(scrollLay);
+    QVBoxLayout *rightScrollLay = new QVBoxLayout();
+    rightScrollLay->addWidget(dataVis);
+    ui->scrollArea_Right->setLayout(rightScrollLay);
 
     dataVis->setGeometry(ui->scrollArea_Right->rect());
 
+    QStringList list;
+    list << "Log" << "Polar Chart";
+    ui->comboBox_infoTypes->addItems(list);
+
+    connect(devicer, &DeviceDispatcher::listDeviceChanged, this, &MainWindow::update_comboBox_widgets);
+
 }
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+
 void MainWindow::tableUpbate()
 {
     ui->treeView->resizeColumnToContents(0);
@@ -88,6 +64,34 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     dataVis->setGeometry(ui->scrollArea_Right->rect());
 }
 
-void MainWindow::getFromCom(QString str)
+void MainWindow::on_actionCom_Device_triggered()
 {
+    leftScrollLay->addWidget(devicer->createComDevice("comport"));
+}
+
+
+void MainWindow::on_actionSocket_triggered()
+{
+    leftScrollLay->addWidget(devicer->createSocketDevice("socket"));
+}
+
+void MainWindow::on_actionServer_triggered()
+{
+    leftScrollLay->addWidget(devicer->createServerDevice("servachok!"));
+}
+
+void MainWindow::on_comboBox_infoTypes_currentIndexChanged(int index)
+{
+    dataVis->changeType(index);
+}
+
+void MainWindow::on_comboBox_widgets_currentIndexChanged(int index)
+{
+
+}
+
+void MainWindow::update_comboBox_widgets()
+{
+    ui->comboBox_widgets->clear();
+    ui->comboBox_widgets->addItems(devicer->getStringListDevices());
 }

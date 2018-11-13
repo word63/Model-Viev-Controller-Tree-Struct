@@ -2,29 +2,38 @@
 
 void DataVisualisator::setPolarChart()
 {
-    currentWidget->deleteLater();
-    chart = new ChartWidget(this);
+   if(currentWidget != nullptr)
+        currentWidget->hide();
+
+    if(chart==nullptr)
+        chart = new ChartWidget(this);
+
     currentWidget = chart;
 
+    emit typeChanged();
 }
 
 void DataVisualisator::setLog()
 {
-    log = new LogWidget(this);
+    if(currentWidget != nullptr)
+         currentWidget->hide();
+
+    if(log==nullptr)
+        log = new LogWidget(this);
+
     currentWidget = log;
 
-
+    emit typeChanged();
 }
 
 DataVisualisator::DataVisualisator(QWidget *parent, int type) : QWidget(parent)
 {
+    connect(this, &DataVisualisator::typeChanged, this, &DataVisualisator::slotTypeChanged);
 
     if(type == noVisualisation)
         setLog();
     else
         changeType(type);
-
-
 }
 
 void DataVisualisator::changeType(int type)
@@ -33,6 +42,12 @@ void DataVisualisator::changeType(int type)
        setPolarChart();
    else
        setLog();
+}
+
+void DataVisualisator::slotTypeChanged()
+{
+        currentWidget->show();
+        currentWidget->setGeometry(this->rect());
 }
 
 void DataVisualisator::resizeEvent(QResizeEvent *event)

@@ -2,6 +2,7 @@
 #define DATADISPATCHER_H
 
 #include <QObject>
+#include "simpletreemodel.h"
 
 class DataDispatcher : public QObject
 {
@@ -9,6 +10,7 @@ class DataDispatcher : public QObject
 public:
     explicit DataDispatcher(QObject *parent = nullptr);
 
+    void addNode();
 signals:
 
 public slots:

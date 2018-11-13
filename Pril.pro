@@ -38,7 +38,8 @@ SOURCES += \
     device/abstractiodevice.cpp \
     device/comportdevice.cpp \
     device/serverdevice.cpp \
-    device/socketdevice.cpp
+    device/socketdevice.cpp \
+    device/devicedispatcher.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     device/abstractiodevice.h \
     device/comportdevice.h \
     device/serverdevice.h \
-    device/socketdevice.h
+    device/socketdevice.h \
+    device/devicedispatcher.h
 
 FORMS += \
         mainwindow.ui

@@ -15,24 +15,14 @@ ComPortDevice::ComPortDevice(QString description) : AbstractIODevice (descriptio
     createLineWidget(pbtnConnect);
 
     connect(pbtnConnect, &QPushButton::clicked, this, &ComPortDevice::on_pbtnConnect_clicked);
-
-    connect(this ,&ComPortDevice::setOpenProperty,this, &ComPortDevice::setOpen);
-    connect(serPort ,&QSerialPort::errorOccurred,this, &ComPortDevice::setOpen);
-
     connect(pbtnSend, &QPushButton::clicked, this, &ComPortDevice::on_pbtnSend_clicked);
 
-    this->comportStr->setText("COM3");
-    this->baudStr->setText("9600");
-}
+    connect(this ,&ComPortDevice::setOpenProperty,this, &ComPortDevice::setOpen);
 
-void ComPortDevice::getData()
-{
+    pbtnSend->setEnabled(false);
 
-    QByteArray bytes = serPort->readAll();
-    QString str = QString::fromLocal8Bit(bytes);
-    lReadData->setText(str);
-
-    emit sendData(str);
+    comportStr->setText("COM3");
+    baudStr->setText("9600");
 }
 
 void ComPortDevice::on_pbtnConnect_clicked()
@@ -43,18 +33,24 @@ void ComPortDevice::on_pbtnConnect_clicked()
 
         serPort->setPort(info);
         serPort->setBaudRate(baudStr->text().toInt());
-        serPort->open(QIODevice::ReadWrite);
-        if(serPort->isDataTerminalReady())
+
+        if(serPort->open(QIODevice::ReadWrite))
         {
-            lOpenStatus->setText("Open");
-//            connect(serPort, &QSerialPort::readyRead, this, &ComPortDevice::getData);
+            isConnected = true;
+
+            // может потичь бочек при принятии данных через
+            // ком порт, если да то виноват этот коннект
+            connect(serPort, &QSerialPort::readyRead, this, &ComPortDevice::receiveData);
         }
+        else
+            isConnected = false;
     }
     else
     {
         serPort->close();
-        lOpenStatus->setText("Closed");
+        isConnected = false;
     }
+
     emit setOpenProperty();
 
 }
@@ -62,17 +58,18 @@ void ComPortDevice::on_pbtnConnect_clicked()
 void ComPortDevice::setOpen()
 {
     QString str;
-    if(serPort->isOpen())
+
+    if(isConnected)
     {
         str = "Open";
-        pbtnConnect->setText("connect");
-        isConnected = true;
+        pbtnConnect->setText("disconnect");
+        pbtnSend->setEnabled(true);
     }
     else
     {
         str = "Closed";
-        pbtnConnect->setText("disconnect");
-        isConnected = false;
+        pbtnConnect->setText("connect");
+        pbtnSend->setEnabled(false);
     }
 
     lOpenStatus->setText(str);
@@ -80,12 +77,34 @@ void ComPortDevice::setOpen()
 
 void ComPortDevice::on_pbtnSend_clicked()
 {
+    sendData(lWriteData->text());
+}
 
-    QString data = lWriteData->text();
-    if(!data.isEmpty())
+
+
+void ComPortDevice::on_pbtnClose_clicked()
+{
+    emit deviceDestroyed(this);
+    this->deleteLater();
+}
+
+void ComPortDevice::receiveData()
+{
+     QByteArray bytes = serPort->readAll();
+
+     QString str = QString::fromLocal8Bit(bytes);
+
+     lReadData->setText(str);
+
+     emit transmitData(str);
+
+}
+
+void ComPortDevice::sendData(QString datas)
+{
+    if(!datas.isEmpty())
     {
-        serPort->write(data.toLocal8Bit());
+        serPort->write(datas.toLocal8Bit());
         lWriteData->clear();
     }
 }
-

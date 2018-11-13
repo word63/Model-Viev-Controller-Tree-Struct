@@ -3,11 +3,10 @@
 
 
 #include "models/simpletreemodel.h"
-#include "device/comportdevice.h"
-#include "device/serverdevice.h"
-#include "device/socketdevice.h"
 #include <QVBoxLayout>
 #include <QSpacerItem>
+
+#include "device/devicedispatcher.h"
 #include "tcpserver.h"
 #include "visualisation/datavisualisator.h"
 
@@ -26,29 +25,38 @@ class MainWindow : public QMainWindow
 private Q_SLOTS:
     void tableUpbate();
 
+    void on_actionCom_Device_triggered();
+
+    void on_actionSocket_triggered();
+
+    void on_actionServer_triggered();
+
+    void on_comboBox_infoTypes_currentIndexChanged(int index);
+
+    void on_comboBox_widgets_currentIndexChanged(int index);
+private slots:
+    void update_comboBox_widgets();
 private:
+
+    DeviceDispatcher *devicer = nullptr;
+
     SimpleTreeModel localModel;
-    TcpServer *server;
     DataVisualisator *dataVis;
 
-    QList<AbstractIODevice* > deviceList;
 
 private:
     Ui::MainWindow *ui;
+
+    QVBoxLayout *leftScrollLay = nullptr;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void setUpTreeView();
-    void setUpDevices();
-    void setUpChart();
-
     // QWidget interface
 protected:
     void resizeEvent(QResizeEvent *event) override;
-private slots:
-    void getFromCom(QString str);
+
 signals:
     void sizeChanged();
 

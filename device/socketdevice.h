@@ -26,7 +26,14 @@ private slots:
     void on_pbtnSend_clicked();
     void on_pbtnConnect_clicked();
 
-    void slotTransmitData();
+    void dataFromSocket();
+
+    // AbstractIODevice interface
+protected:
+    void sendData(QString datas);
+
+protected slots:
+    void on_pbtnClose_clicked() override;
 };
 
 #endif // SOCKETDEVICE_H

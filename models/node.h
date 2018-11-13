@@ -4,19 +4,20 @@
 #include "QString"
 #include "QList"
 
-struct algorithm{
-    bool flag;
-    QString str;
+struct DeviceDescription{
+    QString deviceOut;
+    QString type;
+    QString deviceIn;
     int value;
 };
 
 class Node
 {
 public:
-    Node(algorithm item, Node *parent = 0);
+    Node(DeviceDescription item, Node *parent = nullptr);
 
-    algorithm getItem() const;
-    void setItem(const algorithm &value);
+    DeviceDescription getItem() const;
+    void setItem(const DeviceDescription &value);
 
     void appendChild(Node *child);
     Node *child(int row) const;
@@ -31,7 +32,7 @@ public:
 
 private:
     Node *parent;
-    algorithm item;
+    DeviceDescription item;
     QList<Node *> children;
 
 };

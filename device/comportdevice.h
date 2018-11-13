@@ -22,16 +22,22 @@ public:
     explicit ComPortDevice(QString description);
 
 protected:
-//    void paintEvent(QPaintEvent *event);
+    void sendData(QString datas);
 private slots:
-    void getData();
+
     void on_pbtnConnect_clicked();
     void setOpen();
     void on_pbtnSend_clicked();
 
 signals:
     void setOpenProperty();
-    void sendData(QString str);
+
+
+    // AbstractIODevice interface
+protected slots:
+    void on_pbtnClose_clicked() override;
+    void receiveData() ;
+
 };
 
 #endif // COMPORTDEVICE_H

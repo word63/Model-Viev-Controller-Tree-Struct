@@ -4,7 +4,7 @@ void SocketDevice::makeConnects()
 {
     connect(pbtnSend, &QPushButton::clicked, this, &SocketDevice::on_pbtnSend_clicked);
     connect(pbtnConnect, &QPushButton::clicked, this, &SocketDevice::on_pbtnConnect_clicked);
-    connect(socket, SIGNAL(readyRead()), this, SLOT(slotTransmitData()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(dataFromSocket()));
 
 }
 
@@ -37,14 +37,12 @@ void SocketDevice::on_pbtnSend_clicked()
 {
     if(!socket->isOpen())
     {
-        qDebug() << "socket is closed!";
         return;
     }
 
-    qDebug() << "data transmitted";
     QString data = lWriteData->text();
-    socket->write(data.toLocal8Bit());
 
+    sendData(data);
     lWriteData->clear();
 }
 
@@ -68,11 +66,24 @@ void SocketDevice::on_pbtnConnect_clicked()
     }
 }
 
-void SocketDevice::slotTransmitData()
-{
-    qDebug() << "data gotten to socket";
-    socket->waitForReadyRead(30);
 
-    QString data = QString::fromLocal8Bit(socket->readAll());
-    lReadData->setText(data);
+void SocketDevice::dataFromSocket()
+{
+    socket->waitForReadyRead(30);
+    lReadData->setText(QString::fromLocal8Bit(socket->readAll()));
+}
+
+
+void SocketDevice::sendData(QString datas)
+{
+    socket->write(datas.toLocal8Bit());
+
+}
+
+void SocketDevice::on_pbtnClose_clicked()
+{
+    socket->disconnectFromHost();
+    socket->deleteLater();
+    emit deviceDestroyed(this);
+    this->deleteLater();
 }

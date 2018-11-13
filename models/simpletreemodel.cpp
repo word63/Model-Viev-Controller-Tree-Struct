@@ -4,14 +4,15 @@ SimpleTreeModel::SimpleTreeModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
 
-    rootItem = new Node(algorithm{0,"adsfas",321});
+    rootItem = new Node(DeviceDescription{"servachok!","bridgeTo","comport", true});
 
-    rootItem->appendChild(new Node(algorithm{0,"3333",1},rootItem));
+        rootItem->appendChild(new Node(DeviceDescription
+        {"servachok!","bridgeTo","comport", true},rootItem));
 
-    rootItem->appendChild(new Node(algorithm{0,"555",3},rootItem));
+    //    rootItem->appendChild(new Node(deviceDescription{0,"555",3},rootItem));
 
-    rootItem->child(1)->appendChild(new Node(algorithm{1,"444",2},rootItem->child(1)));
-    rootItem->child(1)->child(0)->appendChild(new Node(algorithm{1,"444",2},rootItem->child(1)->child(0)));
+    //    rootItem->child(1)->appendChild(new Node(deviceDescription{1,"444",2},rootItem->child(1)));
+    //    rootItem->child(1)->child(0)->appendChild(new Node(deviceDescription{1,"444",2},rootItem->child(1)->child(0)));
 
 }
 
@@ -19,9 +20,10 @@ QVariant SimpleTreeModel::headerData(int section, Qt::Orientation orientation, i
 {
     if( orientation == Qt::Horizontal && role == Qt::DisplayRole)
         switch (section ) {
-            case 0: return "flag";
-            case 1: return "str";
-            case 2: return "value";
+        case 0: return "From device";
+        case 1: return "Type";
+        case 2: return "To device";
+        case 3: return "Value";
         }
     return QVariant();
 
@@ -111,18 +113,21 @@ bool SimpleTreeModel::setData(const QModelIndex &index, const QVariant &value, i
     if(role != Qt::EditRole)
         return false;
 
-    algorithm tmp = curentNode->getItem();
+    DeviceDescription tmp = curentNode->getItem();
 
     switch (index.column()) {
-    case 0: tmp.flag = value.toBool();
+    case 0: tmp.deviceOut = value.toString();
         break;
-    case 1: tmp.str = value.toString();
+    case 1: tmp.type= value.toString();
         break;
-    case 2: tmp.value = value.toInt();
+    case 2: tmp.deviceOut = value.toString();
+        break;
+    case 3: tmp.value = value.toInt();
         break;
     default:
         break;
     }
+
     curentNode->setItem(tmp);
 
     emit dataChanged(index, index);
@@ -146,7 +151,7 @@ bool SimpleTreeModel::insertRows(int row, int count, const QModelIndex &parent)
     Node *curenNode = static_cast<Node *>(parent.internalPointer()) ;
 
     beginInsertRows(parent, row, row);
-    Node *newNode = new Node(algorithm{0,"try men",222},curenNode);
+    Node *newNode = new Node(DeviceDescription{"servachok!","bridgeTo","comport", true},curenNode);
 
     curenNode->appendChild(newNode);
 

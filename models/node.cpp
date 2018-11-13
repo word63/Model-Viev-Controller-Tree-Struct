@@ -1,17 +1,17 @@
 #include "node.h"
 
-Node::Node(algorithm item, Node *parent):
+Node::Node(DeviceDescription item, Node *parent):
     parent(parent), item(item)
 {
 
 }
 
-algorithm Node::getItem() const
+DeviceDescription Node::getItem() const
 {
     return item;
 }
 
-void Node::setItem(const algorithm &value)
+void Node::setItem(const DeviceDescription &value)
 {
     item = value;
 }
@@ -33,7 +33,7 @@ int Node::childCount() const
 
 int Node::columnCount() const
 {
-    return 3;
+    return 4;
 }
 
 int Node::row() const
@@ -46,9 +46,10 @@ int Node::row() const
 QVariant Node::data(int column)
 {
     switch (column) {
-        case 0: return item.flag;
-        case 1: return item.str;
-        case 2: return item.value;
+    case 0: return item.deviceOut;
+    case 1: return item.type;
+    case 2: return item.deviceIn;
+    case 3: return item.value;
     }
 
     return QVariant();
